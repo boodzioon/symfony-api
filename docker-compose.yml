@@ -1,0 +1,31 @@
+services:
+  symfony-api-web:
+    container_name: symfony-api-web
+    image: shinsenter/symfony:php8
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - symfony-api-redis
+    volumes:
+      - ./app:/var/www/html
+    environment:
+      PHP_DISPLAY_ERRORS: "1"
+      PHP_POST_MAX_SIZE: "100M"
+      PHP_UPLOAD_MAX_FILESIZE: "16M"
+      PHP_SHORT_OPEN_TAG: false
+      DATABASE_USER: api-user
+      DATABASE_PASSWORD: api-password
+      REDIS_HOST: symfony-api-redis
+  symfony-api-node:
+    container_name: symfony-api-node
+    image: node:lts-alpine
+    command: sh -c "npm install && ./node_modules/.bin/encore production --watch"
+    working_dir: /app
+    volumes:
+      - ./app:/app
+  symfony-api-redis:
+    container_name: symfony-api-redis
+    image: redis
+    ports:
+      - 6379:6379
