@@ -1,7 +1,7 @@
 services:
   symfony-api-web:
     container_name: symfony-api-web
-    image: shinsenter/symfony:php8
+    image: shinsenter/symfony:php7
     ports:
       - 80:80
       - 443:443
