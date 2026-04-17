@@ -3,7 +3,7 @@ types:
         properties:
             name: { nullable: false }
             description: { nullable: false }
-            image: { range: "Text" }
+            image: { nullable: true, range: "Text" }
 
     Offer:
         properties:

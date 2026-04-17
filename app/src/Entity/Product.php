@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTime;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Attribute as Vich;
 
 /**
  * Any offered product or service. For example: a pair of shoes; a concert ticket; the rental of a car; a haircut; or an episode of a TV show streamed online.
@@ -15,6 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @see https://schema.org/Product
  */
 #[ORM\Entity]
+#[Vich\Uploadable]
 #[ApiResource(types: ['https://schema.org/Product'])]
 class Product
 {
@@ -48,9 +53,21 @@ class Product
      *
      * @see https://schema.org/image
      */
+    #[ORM\Column(type: 'text', nullable: true)]
     #[ApiProperty(types: ['https://schema.org/image'])]
-    #[Assert\NotNull]
     private $image;
+
+    #[Vich\UploadableField(mapping: 'product_images', fileNameProperty: 'image')]
+    private ?File $imageFile = null;
+
+    #[ORM\Column(type: 'datetime', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Assert\Type("\DateTimeInterface")]
+    private DateTimeInterface $updatedAt;
+
+    public function __construct()
+    {
+        $this->updatedAt = new DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -85,5 +102,24 @@ class Product
     public function getImage()
     {
         return $this->image;
+    }
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            $this->updatedAt = new DateTime();
+        }
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function getUpdated_at(): DateTimeInterface
+    {
+        return $this->updatedAt;
     }
 }

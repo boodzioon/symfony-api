@@ -17,13 +17,13 @@ services:
       DATABASE_USER: api-user
       DATABASE_PASSWORD: api-password
       REDIS_HOST: symfony-api-redis
-  symfony-api-node:
-    container_name: symfony-api-node
-    image: node:lts-alpine
-    command: sh -c "npm install && ./node_modules/.bin/encore production --watch"
-    working_dir: /app
-    volumes:
-      - ./app:/app
+  # symfony-api-node:
+  #   container_name: symfony-api-node
+  #   image: node:lts-alpine
+  #   command: sh -c "npm install && ./node_modules/.bin/encore production --watch"
+  #   working_dir: /app
+  #   volumes:
+  #     - ./app:/app
   symfony-api-redis:
     container_name: symfony-api-redis
     image: redis
